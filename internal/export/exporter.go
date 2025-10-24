@@ -153,3 +153,53 @@ func (e *Exporter) ExportSummary(result models.SimulationResult, statsReport str
 
 	return filename, nil
 }
+
+// ExportResourceMetrics exports resource usage to a separate CSV
+func (e *Exporter) ExportResourceMetrics(result models.SimulationResult) (string, error) {
+	if err := os.MkdirAll(e.outputDir, 0755); err != nil {
+		return "", fmt.Errorf("failed to create output directory: %w", err)
+	}
+	
+	timestamp := time.Now().Format("20060102_150405")
+	filename := filepath.Join(e.outputDir, fmt.Sprintf("resources_%s.csv", timestamp))
+	
+	file, err := os.Create(filename)
+	if err != nil {
+		return "", fmt.Errorf("failed to create resource CSV: %w", err)
+	}
+	defer file.Close()
+	
+	writer := csv.NewWriter(file)
+	defer writer.Flush()
+	
+	// Write header
+	header := []string{
+		"Metric",
+		"Value",
+		"Unit",
+	}
+	if err := writer.Write(header); err != nil {
+		return "", err
+	}
+	
+	// Write rows
+	rows := [][]string{
+		{"CPU_Available", fmt.Sprintf("%d", result.CPUCount), "cores"},
+		{"CPU_Used", fmt.Sprintf("%d", result.CPUUsed), "cores"},
+		{"Initial_Memory", fmt.Sprintf("%.2f", result.InitialMemoryMB), "MB"},
+		{"Final_Memory", fmt.Sprintf("%.2f", result.FinalMemoryMB), "MB"},
+		{"Peak_Memory", fmt.Sprintf("%.2f", result.PeakMemoryMB), "MB"},
+		{"Average_Memory", fmt.Sprintf("%.2f", result.AverageMemoryMB), "MB"},
+		{"Peak_Goroutines", fmt.Sprintf("%d", result.PeakGoroutines), "count"},
+		{"Duration", fmt.Sprintf("%.3f", result.TotalDuration.Seconds()), "seconds"},
+		{"Bids_Per_Second", fmt.Sprintf("%.1f", float64(result.TotalBids)/result.TotalDuration.Seconds()), "bids/s"},
+	}
+	
+	for _, row := range rows {
+		if err := writer.Write(row); err != nil {
+			return "", err
+		}
+	}
+	
+	return filename, nil
+}

@@ -57,15 +57,21 @@ type BidderStats struct {
 
 // SimulationResult represents the overall simulation results
 type SimulationResult struct {
-	TotalAuctions     int                  // Number of auctions run
-	TotalDuration     time.Duration        // Total time from start to finish
-	StartTime         time.Time            // First auction start time
-	EndTime           time.Time            // Last auction end time
-	AuctionResults    []AuctionResult      // Results of all auctions
-	SuccessfulAuctions int                 // Auctions with at least one bid
-	FailedAuctions    int                  // Auctions with no bids
-	TotalBids         int                  // Total bids across all auctions
-	CPUUsage          float64              // CPU usage percentage
-	MemoryUsedMB      float64              // Memory used in MB
-	PeakMemoryMB      float64              // Peak memory usage
+	TotalAuctions      int                  // Number of auctions run
+	TotalDuration      time.Duration        // Total time from start to finish
+	StartTime          time.Time            // First auction start time
+	EndTime            time.Time            // Last auction end time
+	AuctionResults     []AuctionResult      // Results of all auctions
+	SuccessfulAuctions int                  // Auctions with at least one bid
+	FailedAuctions     int                  // Auctions with no bids
+	TotalBids          int                  // Total bids across all auctions
+	
+	// Resource metrics
+	CPUCount           int                  // Number of CPUs available
+	CPUUsed            int                  // Number of CPUs used (GOMAXPROCS)
+	InitialMemoryMB    float64              // Memory at start
+	FinalMemoryMB      float64              // Memory at end
+	PeakMemoryMB       float64              // Peak memory usage
+	AverageMemoryMB    float64              // Average memory usage
+	PeakGoroutines     int                  // Maximum concurrent goroutines
 }
