@@ -29,3 +29,9 @@ Thumbs.db
 
 # Config (if containing sensitive data)
 config/local.yaml
+
+# Output files
+output/
+*.json
+*.csv
+*.txt
