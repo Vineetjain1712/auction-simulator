@@ -1,0 +1,94 @@
+                        ┌────────────────────────────────────────┐
+                        │              MAIN PROGRAM              │
+                        │ (cmd/simulator/main.go)                │
+                        └───────────────┬────────────────────────┘
+                                        │
+                                        ▼
+                          ┌───────────────────────────┐
+                          │ CONFIGURATION LOADER      │
+                          │ (config/config.go)        │
+                          │ - Auctions: 40            │
+                          │ - Bidders: 100            │
+                          │ - Timeout: 10s            │
+                          │ - Bid Probability: 30%    │
+                          └──────────────┬────────────┘
+                                         │
+                                         ▼
+                           ┌────────────────────────────┐
+                           │ ITEM GENERATOR             │
+                           │ (auction/item_generator.go)│
+                           │ → Creates 40 items,        │
+                           │   each with 20 attributes  │
+                           └──────────────┬─────────────┘
+                                          │
+                                          ▼
+┌────────────────────────────────────────────────────────────────────┐
+│                 AUCTION MANAGER (auction/manager.go)               │
+│  - Spawns 40 auction goroutines                                    │
+│  - Each auction has its own bid channel                            │
+│  - Uses context.WithTimeout(10s) for closure                       │
+│                                                                    │
+│     ┌────────────────────────────────────────────────────────┐     │
+│     │ AUCTION INSTANCE (auction/auction.go)                  │     │
+│     │ - Receives bids via channel                            │     │
+│     │ - Tracks highest bid & bidder                          │     │
+│     │ - Closes when timeout triggers                         │     │
+│     │ - Sends results to aggregator                          │     │
+│     └────────────────────────────────────────────────────────┘     │
+└────────────────────────────────────────────────────────────────────┘
+                                          │
+                                          ▼
+                            ┌──────────────────────────────┐
+                            │ BIDDER POOL (bidder/pool.go) │
+                            │  - Spawns 100 bidder objects │
+                            │  - Each can join multiple    │
+                            │    auctions concurrently     │
+                            │  - 30% chance to bid         │
+                            │  - Random delay (100–2000ms) │
+                            └──────────────┬───────────────┘
+                                           │
+                                           ▼
+┌────────────────────────────────────────────────────────────────────┐
+│         BIDDER GOROUTINES (100 × 40 = ~4,000 total)                │
+│  - Each bidder independently decides when & where to bid           │
+│  - Sends bid messages to auction channels                          │
+│  - Safe concurrent communication via channels                      │
+└────────────────────────────────────────────────────────────────────┘
+                                           │
+                                           ▼
+                            ┌──────────────────────────────┐
+                            │ RESULTS AGGREGATOR           │
+                            │ (stats/analyzer.go)          │
+                            │ - Collects final results     │
+                            │ - Computes stats:            │
+                            │   * Total bids               │
+                            │   * Avg bid value            │
+                            │   * Success rate             │
+                            │   * Throughput (bids/sec)    │
+                            └──────────────┬───────────────┘
+                                           │
+                                           ▼
+                    ┌─────────────────────────────────────────────┐
+                    │ RESOURCE MONITOR (monitor/resources.go)     │
+                    │ - Tracks CPU usage, memory, goroutines      │
+                    │ - Samples every 500ms                       │
+                    │ - Exports to CSV for analysis               │
+                    └──────────────────────┬──────────────────────┘
+                                           │
+                                           ▼
+                    ┌─────────────────────────────────────────────┐
+                    │ EXPORT MODULE (export/exporter.go)          │
+                    │ - Exports results to:                       │
+                    │   * JSON → simulation_*.json                │
+                    │   * CSV  → simulation_*.csv, resources_*.csv│
+                    │   * TXT  → summary_*.txt                    │
+                    │ - Handles timestamped filenames             │
+                    └─────────────────────────────────────────────┘
+                                           │
+                                           ▼
+                     ┌────────────────────────────────────────────┐
+                     │ OUTPUT DIRECTORY (/output)                 │
+                     │ - Contains full simulation data            │
+                     │ - Human-readable summaries                 │
+                     │ - Used for comparisons & benchmarking      │
+                     └────────────────────────────────────────────┘

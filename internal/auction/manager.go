@@ -36,7 +36,6 @@ func NewManager(cfg *config.Config) *Manager {
 }
 
 // AggregateResults compiles all auction results into a simulation result
-// EXPORTED (capital A) so main can call it
 func (m *Manager) AggregateResults() models.SimulationResult {
 	m.Mu.Lock()
 	defer m.Mu.Unlock()

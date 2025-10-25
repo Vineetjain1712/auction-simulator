@@ -1,3 +1,7 @@
+// Package auction provides an Auction implementation for running auctions,
+// collecting and storing bids, and determining winners for auction items.
+// This package exposes an Auction type that can be run with a context and timeout,
+// accepts bids via a channel, and returns an AuctionResult summarizing the outcome.
 package auction
 
 import (

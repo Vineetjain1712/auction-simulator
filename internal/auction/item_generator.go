@@ -96,7 +96,7 @@ func (g *ItemGenerator) randomFloatUnsafe(min, max float64) float64 {
 // GenerateItems generates multiple items at once
 func (g *ItemGenerator) GenerateItems(count int) []models.AuctionItem {
 	items := make([]models.AuctionItem, count)
-	for i := 0; i < count; i++ {
+	for i := range count {
 		items[i] = g.GenerateItem(i + 1)
 	}
 	return items

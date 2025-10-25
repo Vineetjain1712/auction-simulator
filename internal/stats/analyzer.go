@@ -1,3 +1,5 @@
+// Package stats provides utilities to analyze auction simulation results,
+// producing aggregated statistics and formatted reports.
 package stats
 
 import (

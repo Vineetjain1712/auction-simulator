@@ -1,3 +1,4 @@
+// Package config provides configuration types and defaults for the auction simulator.
 package config
 
 import (

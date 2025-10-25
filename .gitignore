@@ -31,7 +31,7 @@ Thumbs.db
 config/local.yaml
 
 # Output files
-output/
-*.json
-*.csv
-*.txt
+# output/
+# *.json
+# *.csv
+# *.txt

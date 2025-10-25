@@ -1,3 +1,5 @@
+// Package bidder provides a simulated bidder that can participate in auctions,
+// make bidding decisions, calculate bid amounts, and send bids to an auction manager.
 package bidder
 
 import (

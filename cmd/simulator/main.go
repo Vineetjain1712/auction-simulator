@@ -62,9 +62,10 @@ func printBanner() {
 	banner := `
 ╔═══════════════════════════════════════════════════════════╗
 ║                                                           ║
-║          🎯 CONCURRENT AUCTION SIMULATOR v1.0            ║
+║          🎯 CONCURRENT AUCTION SIMULATOR v1.0             ║
 ║                                                           ║
-║              Built with Go • Phase 5 Complete            ║
+║              Built with Go • Phase 5 Complete             ║
+║              		Author : Vineet Jain            		║
 ║                                                           ║
 ╚═══════════════════════════════════════════════════════════╝
 `

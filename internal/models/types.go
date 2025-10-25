@@ -1,3 +1,4 @@
+// Package models defines domain types used by the auction simulator.
 package models
 
 import "time"

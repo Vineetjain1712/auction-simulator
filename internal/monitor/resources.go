@@ -1,3 +1,8 @@
+// Package monitor provides utilities to capture and report runtime resource usage
+// such as memory, CPU, and goroutine statistics for benchmarking and monitoring.
+//
+// It exposes a ResourceMonitor to collect periodic snapshots and helper functions
+// to standardize and query current resource state.
 package monitor
 
 import (
